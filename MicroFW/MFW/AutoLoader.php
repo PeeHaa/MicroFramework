@@ -1,5 +1,4 @@
 <?php
-
 /**
  * AutoLoader class provides autoload functions for spl_autoload
  *
@@ -12,7 +11,7 @@
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  * @copyright  Copyright (c) 2012 Pieter Hordijk
  * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
- * @version    Build 1.0.0
+ * @version    1.0.0
  */
 
 /**
