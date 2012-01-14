@@ -1,1 +1,3 @@
 MicroFrameWork is a lightweight PHP framework which utilizes the MVC pattern.
+
+This is just the development release and should never be used in a production environment. Actually it should not be used at all :-)
