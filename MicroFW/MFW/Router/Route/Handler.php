@@ -57,7 +57,7 @@ class MFW_Router_Route_Handler
      */
     protected function validateHandler($handler)
     {
-        if (substr_count($handler, '/') !== 1) {
+        if (substr_count($handler, '/') !== 1 || strpos($handler, ' ') !== False) {
             throw new UnexpectedValueException('Invalid route handler `' . $handler . '`');
         }
     }
