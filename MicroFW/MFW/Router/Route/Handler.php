@@ -16,7 +16,6 @@
 /**
  * Gets the controller and action of a route
  *
- * @todo       Create and use Uri class to better separate logic
  * @category   MicroFramework
  * @package    Router
  * @subpackage Route
