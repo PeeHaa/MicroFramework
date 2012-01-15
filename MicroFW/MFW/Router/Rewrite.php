@@ -97,6 +97,8 @@ class MFW_Router_Rewrite
     /**
      * Set the path (the location) of the controller files
      *
+     * @todo Add better exception
+     *
      * @param string $path The path of the controller files
      *
      * @throws Exception If the path doesn't exists
@@ -104,7 +106,7 @@ class MFW_Router_Rewrite
     public function setControllerPath($path)
     {
         if (!is_dir($path)) {
-            throw new Exception('The specified controller directory (`' . $path . '`) does not exist.');
+            throw new InvalidArgumentException('The specified controller directory (`' . $path . '`) does not exist.');
         }
 
         $this->controller_path = $path;
