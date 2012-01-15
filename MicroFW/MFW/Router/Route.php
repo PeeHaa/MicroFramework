@@ -218,7 +218,7 @@ class MFW_Router_Route
         }
 
         foreach($uriparts as $part) {
-            if ($this->isUriPartVariable($part)) {
+            if (!$this->isUriPartVariable($part)) {
                 continue;
             }
 
@@ -261,6 +261,38 @@ class MFW_Router_Route
     }
 
     /**
+     * Check whether variable is a required variable
+     *
+     * @return boolean
+     */
+    protected function isUriVariableRequired($name)
+    {
+        $required = $this->getRequiredParams();
+
+        if (in_array($name, $required)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check whether variable is an optional variable
+     *
+     * @return boolean
+     */
+    protected function isUriVariableOptional($name)
+    {
+        $optional = $this->getOptionalParams();
+
+        if (in_array($name, $optional)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Add optional parameter to route
      *
      * @param string $param The parameter to add
@@ -278,6 +310,18 @@ class MFW_Router_Route
     protected function getOptionalParams()
     {
         return $this->optional_params;
+    }
+
+    /**
+     * Get optional parameter value
+     *
+     * @return string The default value of the parameter
+     */
+    protected function getDefaultParamValue($param)
+    {
+        $defaults = $this->getDefaults();
+
+        return $defaults[$param];
     }
 
     /**
@@ -313,25 +357,23 @@ class MFW_Router_Route
 
         $uriparts = $this->getUriParts();
 
-        if ($uriparts === false) {
+        if ($uriparts === null) {
             return '';
         }
 
         $uri = '';
         foreach($uriparts as $part) {
-            if (!array_key_exists($part, $params)) {
-                break;
-            }
-
             if ($this->isUriPartVariable($part)) {
-                $uri.= '/' . $params[substr($part, 1)];
+                $paramname = substr($part, 1);
+
+                if (array_key_exists($paramname, $params)) {
+                    $uri.= '/' . $params[$paramname];
+                } elseif ($this->getDefaultParamValue($paramname) !== false) {
+                    $uri.= '/' . $this->getDefaultParamValue($paramname);
+                }
             } else {
                 $uri.= '/' . $part;
             }
-        }
-
-        if ($uri == '') {
-            $uri = '/';
         }
 
         return $uri;
@@ -346,8 +388,7 @@ class MFW_Router_Route
     {
         $this->validateRequiredParams($params);
 
-        // check whether there isn't a required-optional param, e.g. /my/uri/{missing optional param1}/param2
-        $this->validateOptionalParams($params);
+        $this->validateMissingParams($params);
 
         $this->validateParamRequirements($params);
     }
@@ -370,21 +411,30 @@ class MFW_Router_Route
 
     /**
      * Validate whether all optional parameters are given to prevent a missing parameter in the URL, e.g.: /param1//param3
+     * Loops through all parts in the uri to find missing parts. If a missing parts is found it check for trailing parts
+     * Trailingparts are either static parts, required variable or optional variables with a value
      *
      * @throws DomainException If there is an optional parameter missing
      */
-    protected function validateOptionalParams($params)
+    protected function validateMissingParams($params)
     {
-        $optional = $this->getOptionalParams();
+        $defaults = $this->getDefaults();
+        $uriparts = $this->getUriParts();
 
-        $missing_optional = false;
-        foreach($optional as $opt) {
-            if (array_key_exists($opt, $params)) {
-                if ($missing_optional !== false) {
-                    throw new DomainException('Missing optional parameter (`' . $missing_optional . '`) in route.');
+        $missing = false;
+        foreach($uriparts as $part) {
+            if ((!$this->isUriPartVariable($part) || $this->isUriVariableRequired(substr($part, 1))) && $missing !== false) {
+                throw new DomainException('Missing optional parameter (`' . $missing . '`) in route.');
+            } elseif ($this->isUriVariableOptional(substr($part, 1))) {
+                $variableparam = substr($part, 1);
+
+                if (array_key_exists($variableparam, $params) || (array_key_exists($variableparam, $defaults) && $defaults[$variableparam] !== false)) {
+                    if ($missing !== false) {
+                        throw new DomainException('Missing optional parameter (`' . $missing . '`) in route.');
+                    }
+                } else {
+                    $missing = $variableparam;
                 }
-            } else {
-                $missing_optional = $opt;
             }
         }
     }
@@ -396,7 +446,7 @@ class MFW_Router_Route
      */
     protected function validateParamRequirements($params)
     {
-        $requirements = $this->getRequiredParams();
+        $requirements = $this->getRequirements();
 
         foreach($requirements as $param => $req) {
             if (array_key_exists($param, $params)) {
