@@ -92,7 +92,7 @@ class MFW_Mail
      */
     public function __construct()
     {
-        $this->setBoundary($this->generateBoundary);
+        $this->setBoundary($this->generateBoundary());
     }
 
     /**
