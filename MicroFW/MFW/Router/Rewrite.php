@@ -42,6 +42,21 @@ class MFW_Router_Rewrite
     }
 
     /**
+     * Get a routes based on name
+     *
+     * @throws OutOfBoundsException if no route matches
+     * @return MFW_Router_Route The route
+     */
+    protected function getRoute($name)
+    {
+        if (!array_key_exists($name, $this->routes)) {
+            throw new OutOfBoundsException('No route matches with name: `' . $name . '`');
+        }
+
+        return $this->routes[$name];
+    }
+
+    /**
      * Get all routes
      *
      * @return array The routes in the rewrite engine
@@ -101,7 +116,7 @@ class MFW_Router_Rewrite
      *
      * @param string $path The path of the controller files
      *
-     * @throws Exception If the path doesn't exists
+     * @throws InvalidArgumentException If the path doesn't exists
      */
     public function setControllerPath($path)
     {
@@ -110,5 +125,25 @@ class MFW_Router_Rewrite
         }
 
         $this->controller_path = $path;
+    }
+
+    /**
+     * Finds the route given an url
+     *
+     * @param string $url The url to match routes against
+     * @throws RuntimeException If no routes matches the url
+     * @return MFW_Router_Route The first route that matches
+     */
+    public function getRouteByUrl($url)
+    {
+        $routes = $this->getRoutes();
+
+        foreach($routes as $route) {
+            if ($route->matchesUrl($url)) {
+                return $route;
+            }
+        }
+
+        throw new RuntimeException('No route matches url: `' . $url . '`');
     }
 }

@@ -33,14 +33,19 @@ class MFW_Router_Route
     protected $uri;
 
     /**
+     * @var array The variable parameters (both required and optional) with index based on position in url
+     */
+    protected $variableParams = array();
+
+    /**
      * @var array The required parameters of the route
      */
-    protected $required_params = array();
+    protected $requiredParams = array();
 
     /**
      * @var array The optional parameters of the route
      */
-    protected $optional_params = array();
+    protected $optionalParams = array();
 
     /**
      * @var MFW_Router_Route_Handler The handler of the route (controller/action)
@@ -217,12 +222,14 @@ class MFW_Router_Route
             return;
         }
 
-        foreach($uriparts as $part) {
+        foreach($uriparts as $index => $part) {
             if (!$this->isUriPartVariable($part)) {
                 continue;
             }
 
             $param = substr($part, 1);
+
+            $this->addVariableParam($index, $param);
 
             if (array_key_exists($param, $defaults)) {
                 $this->addOptionalParam($param);
@@ -230,6 +237,27 @@ class MFW_Router_Route
                 $this->addRequiredParam($param);
             }
         }
+    }
+
+    /**
+     * Add a variable parameters
+     *
+     * @param int $index The position of the parameter in the url
+     * @param string $name The name of the parameter
+     */
+    protected function addVariableParam($index, $name)
+    {
+        $this->variableParams[$index] = $param;
+    }
+
+    /**
+     * Gets all the variable parameters of the route
+     *
+     * @return array All variable parameters in the route with an index based on position in the url
+     */
+    protected function getVariableParams()
+    {
+        return $this->variableParams;
     }
 
     /**
@@ -299,7 +327,7 @@ class MFW_Router_Route
      */
     protected function addOptionalParam($param)
     {
-        $this->optional_params[] = $param;
+        $this->optionalParams[] = $param;
     }
 
     /**
@@ -309,7 +337,7 @@ class MFW_Router_Route
      */
     protected function getOptionalParams()
     {
-        return $this->optional_params;
+        return $this->optionalParams;
     }
 
     /**
@@ -331,7 +359,7 @@ class MFW_Router_Route
      */
     protected function addRequiredParam($param)
     {
-        $this->required_params[] = $param;
+        $this->requiredParams[] = $param;
     }
 
     /**
@@ -341,7 +369,7 @@ class MFW_Router_Route
      */
     protected function getRequiredParams()
     {
-        return $this->required_params;
+        return $this->requiredParams;
     }
 
     /**
@@ -456,5 +484,73 @@ class MFW_Router_Route
                 }
             }
         }
+    }
+
+    /**
+     * Compares the route against an URL
+     *
+     * @return boolean True if route matches the url
+     */
+    public function matchesUrl($url)
+    {
+        $urlParts = explode('/', $this->normalizeUri($url));
+        $routeParts = explode('/', $this->normalizeUri($this->getUri()));
+
+        if (!$this->doStaticPartsMatch($urlParts, $routeParts)) {
+            return false;
+        }
+
+        if ($this->doesDepthMatch($urlParts, $routeParts)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks whether all static parts of URL match the static parts of the route
+     *
+     * @return boolean True if static parts match
+     */
+    protected function doStaticPartsMatch($urlParts, $routeParts)
+    {
+        foreach($urlParts as $index => $urlPart) {
+            if ($this->isUriPartVariable($routeParts[$index])) {
+                continue;
+            }
+
+            if ($urlPart != $routeParts[$index]) {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Checks whether the URL has the correct depth to match the route
+     *
+     * @return boolean True if depth of the URL matches with the route
+     */
+    protected function doesDepthMatch($urlParts, $routeParts)
+    {
+        $numUrlParts = count($urlParts);
+        $numRouteParts = count($routeParts);
+
+        if (count($urlparts) == count($routeparts)) {
+            return true;
+        }
+
+        if (count($urlparts) > count($routeparts)) {
+            return false;
+        }
+
+        $match = true;
+
+        for ($i = $numUrlParts; $i < $numRouteParts; $i++) {
+            if (!$this->isUriPartVariable($routeparts[$i])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
