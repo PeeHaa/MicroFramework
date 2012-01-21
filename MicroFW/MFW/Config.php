@@ -66,7 +66,7 @@ class MFW_Config
      */
     protected function setConfig($configname)
     {
-        require(SITE_PATH.'/config/'.$configname.'.php');
+        require(SITE_PATH.'/config/' . $configname . '.php');
 
         $this->config = $config;
     }
