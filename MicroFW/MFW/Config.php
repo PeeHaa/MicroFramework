@@ -15,6 +15,7 @@
 /**
  * Load project specific configuration options
  *
+ * @todo       Implement multiple config paths
  * @category   MicroFramework
  * @package    Config
  * @author     Pieter Hordijk <info@pieterhordijk.com>
@@ -24,7 +25,7 @@ class MFW_Config
     /**
      * @var stdClass The configuration options
      */
-    private $config;
+    protected $config;
 
     /**
      * Create config instance
@@ -34,7 +35,7 @@ class MFW_Config
      */
     public function __construct($configname)
     {
-        $this->validateConfig($configname);
+        $this->validateConfigFile($configname);
 
         $this->setConfig($configname);
     }
@@ -46,7 +47,7 @@ class MFW_Config
      * @return void
      * @throws RuntimeException If config file does not exists or is not readable
      */
-    private function validateConfig($configname)
+    protected function validateConfigFile($configname)
     {
         if (!is_file(SITE_PATH . '/config/' . $configname . '.php')) {
             throw new RuntimeException('Cannot find config (`'.$configname.'`) file.');
@@ -63,7 +64,7 @@ class MFW_Config
      * @param string $configname The name of the configuration
      * @return void
      */
-    private function setConfig($configname)
+    protected function setConfig($configname)
     {
         require(SITE_PATH.'/config/'.$configname.'.php');
 
@@ -76,7 +77,7 @@ class MFW_Config
      * @param string $name The name of the configuration option
      * @return void
      */
-    function __get($name)
+    public function __get($name)
     {
         return $this->config->$name;
     }
