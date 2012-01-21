@@ -50,11 +50,11 @@ class MFW_Config
     protected function validateConfigFile($configname)
     {
         if (!is_file(SITE_PATH . '/config/' . $configname . '.php')) {
-            throw new RuntimeException('Cannot find config (`'.$configname.'`) file.');
+            throw new RuntimeException('Cannot find config (`' . $configname . '`) file.');
         }
 
         if (!is_readable(SITE_PATH . '/config/' . $configname . '.php')) {
-            throw new RuntimeException('Cannot read config (`'.$configname.'`) file.');
+            throw new RuntimeException('Cannot read config (`' . $configname . '`) file.');
         }
     }
 
