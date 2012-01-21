@@ -210,6 +210,17 @@ class MFW_Controller
      * @param string $name The (relative) filename of the view
      * @return void
      */
+    protected function renderXml($filename)
+    {
+        print($this->getView()->renderXml($filename));
+    }
+
+    /**
+     * Renders a ATOM view (atom-xml)
+     *
+     * @param string $name The (relative) filename of the view
+     * @return void
+     */
     protected function renderAtom($filename)
     {
         print($this->getView()->renderAtom($filename));
