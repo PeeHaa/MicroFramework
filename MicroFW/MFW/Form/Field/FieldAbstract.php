@@ -44,6 +44,11 @@ abstract class MFW_Form_Field_FieldAbstract
     protected $attributes = array();
 
     /**
+     * @var null|string The requirements the value should meet if any
+     */
+    protected $requirements = null;
+
+    /**
      * @var string The raw user-specified value of the field
      */
     protected $rawData = null;
@@ -58,6 +63,11 @@ abstract class MFW_Form_Field_FieldAbstract
      */
     protected $errors = array();
 
+    /**
+     * Creates an instance of the field
+     *
+     * @param array $args The arguments to initialize the field
+     */
     public function __construct($args = array())
     {
         $this->setFieldType();
@@ -72,6 +82,10 @@ abstract class MFW_Form_Field_FieldAbstract
 
         if (array_key_exists('attributes', $args)) {
             $this->setAttributes($args['attributes']);
+        }
+
+        if (array_key_exists('requirements', $args)) {
+            $this->setRequirements($args['requirements']);
         }
 
         if (array_key_exists('data', $args)) {
@@ -162,6 +176,27 @@ abstract class MFW_Form_Field_FieldAbstract
     }
 
     /**
+     * Set the requirements
+     *
+     * @param string $reqs The requirements of the field value
+     * @return void
+     */
+    public function setRequirements($reqs)
+    {
+        $this->requirements = $reqs;
+    }
+
+    /**
+     * Get the requirements
+     *
+     * @return string The requirements of the value field
+     */
+    public function getRequirements()
+    {
+        return $this->requirements;
+    }
+
+    /**
      * Set the raw data
      *
      * @param string $rawData The raw data
@@ -183,13 +218,15 @@ abstract class MFW_Form_Field_FieldAbstract
     }
 
     /**
-     * Set the cleaned data
+     * Set the cleaned data and the initial value of the field
      *
      * @param string $data The cleaned data
      * @return void
      */
     protected function setData($data)
     {
+        $this->setInitial($data);
+
         $this->data = $data;
     }
 
@@ -219,9 +256,9 @@ abstract class MFW_Form_Field_FieldAbstract
      *
      * @return array The errors
      */
-    public function getData()
+    public function getErrors()
     {
-        return $this->data;
+        return $this->errors;
     }
 
     /**
@@ -229,7 +266,7 @@ abstract class MFW_Form_Field_FieldAbstract
      *
      * @return void
      */
-    public abstract function clean($rawdata)
+    public abstract function clean()
     {
     }
 
@@ -240,5 +277,26 @@ abstract class MFW_Form_Field_FieldAbstract
      */
     public abstract function isValid()
     {
+    }
+
+    /**
+     * Checks whether the value meets the requirements
+     *
+     * @return boolean
+     */
+    protected function meetsRequirements()
+    {
+        $requirements = $this->getRequirements();
+
+        if ($requirements === null) {
+            return true;
+        }
+
+        $pattern = '/' . $requirements . '/';
+        if (!preg_match($pattern, $this->getData())) {
+            return false;
+        }
+
+        return true;
     }
 }
