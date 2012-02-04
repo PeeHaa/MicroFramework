@@ -32,7 +32,7 @@ class MFW_AutoLoader
      */
     public function loadProject($class)
     {
-        $filename = SITE_PATH . '/models/' . $class . '.php';
+        $filename = MFW_SITE_PATH . '/code/models/' . $class . '.php';
 
         if (!is_readable($filename)) {
             return false;
@@ -50,7 +50,7 @@ class MFW_AutoLoader
     {
         $path = explode('_', $class);
 
-        $filename = LIB_PATH . '/' . implode('/', $path) . '.php';
+        $filename = MFW_LIB_PATH . '/' . implode('/', $path) . '.php';
 
         if (!is_readable($filename)) {
             return false;
