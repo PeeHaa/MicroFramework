@@ -75,6 +75,7 @@ define('MFW_PROXY_PORT', '');
 define('MFW_DB_ENGINE', 'pgsql');
 define('MFW_DB_NAME', 'dbexample');
 define('MFW_DB_HOST', 'localhost');
+define('MFW_DB_PORT', null);
 define('MFW_DB_USERNAME', 'dbrole');
 define('MFW_DB_PASSWORD', 'dbrolepassword');
 
