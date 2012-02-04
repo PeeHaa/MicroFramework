@@ -1,0 +1,22 @@
+<?php
+
+if (!MFW_GA_CODE) {
+    return;
+}
+
+$s = '';
+
+$s.= '<script type="text/javascript">'.N;
+$s.= '  var _gaq = _gaq || [];'.N;
+$s.= '  _gaq.push([\'_setAccount\', \''.MFW_GA_CODE.'\']);'.N;
+$s.= '  _gaq.push([\'_trackPageview\']);'.N;
+
+$s.= '  (function() {'.N;
+$s.= '    var ga = document.createElement(\'script\'); ga.type = \'text/javascript\'; ga.async = true;'.N;
+$s.= '    ga.src = (\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\';'.N;
+$s.= '    var s = document.getElementsByTagName(\'script\')[0]; s.parentNode.insertBefore(ga, s);'.N;
+$s.= '  })();'.N;
+
+$s.= '</script>'.N;
+
+print($s);
