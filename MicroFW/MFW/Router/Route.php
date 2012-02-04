@@ -500,7 +500,7 @@ class MFW_Router_Route
             return false;
         }
 
-        if ($this->doesDepthMatch($urlParts, $routeParts)) {
+        if (!$this->doesDepthMatch($urlParts, $routeParts)) {
             return false;
         }
 
@@ -523,6 +523,8 @@ class MFW_Router_Route
                 return false;
             }
         }
+
+        return true;
     }
 
     /**
@@ -535,18 +537,18 @@ class MFW_Router_Route
         $numUrlParts = count($urlParts);
         $numRouteParts = count($routeParts);
 
-        if (count($urlparts) == count($routeparts)) {
+        if (count($urlParts) == count($routeParts)) {
             return true;
         }
 
-        if (count($urlparts) > count($routeparts)) {
+        if (count($urlParts) > count($routeParts)) {
             return false;
         }
 
         $match = true;
 
         for ($i = $numUrlParts; $i < $numRouteParts; $i++) {
-            if (!$this->isUriPartVariable($routeparts[$i])) {
+            if (!$this->isUriPartVariable($routeParts[$i])) {
                 return false;
             }
         }
