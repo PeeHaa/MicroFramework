@@ -27,16 +27,59 @@ class MFW_Router_Rewrite
     protected $routes = array();
 
     /**
-     * @var string The location of the controller files
+     * Creates an instance of the rewrite engine
+     *
+     * @param array $routes The routes as defined in the routes.php of the project
+     *
+     * @return void
      */
-    protected $controller_path;
+    public function __construct(array $routes)
+    {
+        $this->parseRoutes($routes);
+    }
+
+    /**
+     * Parses the project routes and adds them to the rewrite engine
+     * The array should have the format Array $name => $uri, $handler, [$defaults], [$requirements]
+     *
+     * @param array $routes The routes as defined in the routes.php of the project
+     *
+     * throws UnderflowException If no route is defined
+     * @return void
+     */
+    protected function parseRoutes(array $routes)
+    {
+        if (empty($routes)) {
+            throw new UnderflowException('At least one route should be defined in the project.');
+        }
+
+        foreach($routes as $name => $properties) {
+            $routeDefaults = array();
+            if (isset($properties[2])) {
+                $routeDefaults = $properties[2];
+            }
+
+            $routeRequirements = array();
+            if (isset($properties[3])) {
+                $routeDefaults = $properties[3];
+            }
+
+            $route = new MFW_Router_Route($name,
+                                          $properties[0],
+                                          new MFW_Router_Route_Handler($properties[1]),
+                                          $routeDefaults,
+                                          $routeRequirements
+                                          );
+            $this->addRoute($route);
+        }
+    }
 
     /**
      * Add route to rewrite engine
      *
      * @param MFW_Router_Route $route The route to add
      */
-    public function addRoute(MFW_Router_Route $route)
+    protected function addRoute(MFW_Router_Route $route)
     {
         $this->routes[$route->getName()] = $route;
     }
@@ -45,6 +88,7 @@ class MFW_Router_Rewrite
      * Get a routes based on name
      *
      * @throws OutOfBoundsException if no route matches
+     *
      * @return MFW_Router_Route The route
      */
     protected function getRoute($name)
@@ -110,27 +154,10 @@ class MFW_Router_Rewrite
     }
 
     /**
-     * Set the path (the location) of the controller files
-     *
-     * @todo Add better exception
-     *
-     * @param string $path The path of the controller files
-     *
-     * @throws InvalidArgumentException If the path doesn't exists
-     */
-    public function setControllerPath($path)
-    {
-        if (!is_dir($path)) {
-            throw new InvalidArgumentException('The specified controller directory (`' . $path . '`) does not exist.');
-        }
-
-        $this->controller_path = $path;
-    }
-
-    /**
      * Finds the route given an url
      *
      * @param string $url The url to match routes against
+     *
      * @throws RuntimeException If no routes matches the url
      * @return MFW_Router_Route The first route that matches
      */
