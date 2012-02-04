@@ -47,6 +47,7 @@ class MFW_View
      *
      * @param MFW_Router_Rewrite $router The router
      * @param string $viewPath The (root) path of the view files
+     *
      * @return void
      */
     public function __construct(MFW_Router_Rewrite $router, $viewPath)
@@ -81,8 +82,9 @@ class MFW_View
      * Sets the view path
      *
      * @param string $viewPath The (root) path of the view files
-     * @return void
+     *
      * @throws RuntimeException If an invalid path is specified
+     * @return void
      */
     protected function setViewPath($viewPath)
     {
@@ -108,6 +110,7 @@ class MFW_View
      *
      * @param string $key The name of the variable
      * @param mixed $value The value of the variable
+     *
      * @return void
      */
     public function __set($key, $value) {
@@ -118,8 +121,9 @@ class MFW_View
      * Gets a view variable
      *
      * @param string $key The name of the variable
-     * @return mixed The value of the variable
+     *
      * @throws OutOfBoundsException If the variable does not exist
+     * @return mixed The value of the variable
      */
     public function &__get($key)
     {
@@ -134,6 +138,7 @@ class MFW_View
      * Check whether a view variable isset
      *
      * @param string $key The name of the variable
+     *
      * @return boolean
      */
     public function __isset($key)
@@ -145,12 +150,13 @@ class MFW_View
      * Checks whether a view filename is found and return it
      *
      * @param string $name The name of the view file
-     * @return string The filename of the vire
+     *
      * @throws RuntimeException If an invalid view is specified (view file not found)
+     * @return string The filename of the vire
      */
-    protected getViewFilename($name)
+    protected function getViewFilename($name)
     {
-        $path = $this->getViewPath()->$name;
+        $path = $this->getViewPath() . '/' . $name;
 
         if (!file_exists($path)) {
             throw new Exception('View (`' . $name . '`) not found in `' . $path . '`.');
@@ -163,6 +169,7 @@ class MFW_View
      * Renders a view
      *
      * @param string $name The name of the view file
+     *
      * @return string The content of the view
      */
     public function render($name)
@@ -176,6 +183,7 @@ class MFW_View
      * Renders an atom view (with the correct content-type)
      *
      * @param string $name The name of the view file
+     *
      * @return string The content of the view
      */
     public function renderAtom($name)
@@ -189,6 +197,7 @@ class MFW_View
      * Renders an xml view (with the correct content-type)
      *
      * @param string $name The name of the view file
+     *
      * @return string The content of the view
      */
     public function renderXml($name)
@@ -203,6 +212,7 @@ class MFW_View
      *
      * @param string $name The name of the slot
      * @param mixed $value The value of the slot
+     *
      * @return void
      */
     public function setSlot($name, $value)
@@ -214,8 +224,9 @@ class MFW_View
      * Gets a slot variable
      *
      * @param string $name The name of the slot
-     * @return mixed $value The value of the slot
+     *
      * @throws OutOfBoundsException If slot is not set
+     * @return mixed $value The value of the slot
      */
     public function getSlot($name)
     {
@@ -231,11 +242,12 @@ class MFW_View
      *
      * @param string $name The name of the slot
      * @param mixed $value The default value
+     *
      * @return mixed $value The value (or default value) of the slot
      */
     public function defaultSlot($name, $value)
     {
-        if (isset($this->slots)) {
+        if (array_key_exists($name, $this->slots)) {
             return $this->slots[$name];
         } else {
             return $value;
@@ -247,6 +259,7 @@ class MFW_View
      *
      * @param null|string $name The name of the route
      * @param array $params The parameters to build the url
+     *
      * @return string The current url or the built url based on routename and params
      */
     protected function url($name = null, $params = array())
