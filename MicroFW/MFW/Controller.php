@@ -23,7 +23,7 @@
 class MFW_Controller
 {
     /**
-     * @var MFW_Router_Rewrite The router engine
+     * @var MFW_Router_Rewrite The rewrite engine
      */
     protected $router;
 
@@ -45,7 +45,7 @@ class MFW_Controller
      *
      * @return void
      */
-    public function __construct(MFW_Router $router, MFW_View $view)
+    public function __construct(MFW_Router_Rewrite $router, MFW_View $view)
     {
         $this->setRouter($router);
 
