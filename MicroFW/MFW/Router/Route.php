@@ -247,7 +247,7 @@ class MFW_Router_Route
      */
     protected function addVariableParam($index, $name)
     {
-        $this->variableParams[$index] = $param;
+        $this->variableParams[$index] = $name;
     }
 
     /**
