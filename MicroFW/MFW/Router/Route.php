@@ -255,7 +255,7 @@ class MFW_Router_Route
      *
      * @return array All variable parameters in the route with an index based on position in the url
      */
-    protected function getVariableParams()
+    public function getVariableParams()
     {
         return $this->variableParams;
     }

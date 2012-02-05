@@ -108,6 +108,7 @@ class MFW_Controller
      * Get the variables of the request
      *
      * @ todo This stuff should be handled by a request class
+     *
      * @return void
      */
     protected function getRequest()
@@ -132,9 +133,20 @@ class MFW_Controller
     }
 
     /**
+     * Get the request parameters
+     *
+     * @return array The request parameters currently saved
+     */
+    protected function getRequestParams()
+    {
+        return $this->requestParams;
+    }
+
+    /**
      * Adds the URL parameters of the current request to the requestParams
      *
      * @param MFW_Router_Route $route The route to get the parameters from
+     *
      * @return void
      */
     protected function setUrlParams($route)
@@ -161,11 +173,12 @@ class MFW_Controller
      * Trim query string from an url
      *
      * @param string $url The url with (possibly) a query string
+     *
      * @return string The url without a querystring
      */
     protected function trimQueryString($url)
     {
-        return strtok($url(), '?');
+        return strtok($url, '?');
     }
 
     /**
