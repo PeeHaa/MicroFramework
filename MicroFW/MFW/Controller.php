@@ -151,7 +151,7 @@ class MFW_Controller
      */
     protected function setUrlParams($route)
     {
-        $cleanUrl = $this->trimQueryString($this->url());
+        $cleanUrl = $this->normalizeUrl($this->url());
         $urlparts = explode('/', $cleanUrl);
 
         $routevars = $route->getVariableParams();
@@ -161,12 +161,38 @@ class MFW_Controller
             if (!isset($urlparts[$index])) {
                 continue;
             }
-
             $params[$var] = $urlparts[$index];
         }
 
         $requestParams = $this->getRequestParams();
         $this->requestParams = array_merge($requestParams, $params);
+    }
+
+    /**
+     * Normalizes the URL the make it easy to use an explode('/', $url) on it
+     *
+     * @param string $url The url
+     *
+     * @return string The normalized url
+     */
+    protected function normalizeUrl($url)
+    {
+        $cleanUrl = $this->trimQueryString($url);
+        $cleanUrl = $this->trimSlashes($url);
+
+        return $cleanUrl;
+    }
+
+    /**
+     * Trim leading and trailing slashes from url
+     *
+     * @param string $url The url
+     *
+     * @return string The url without leading and trailing slashes
+     */
+    protected function trimSlashes($url)
+    {
+        return trim($url, '/');
     }
 
     /**
@@ -199,8 +225,8 @@ class MFW_Controller
      */
     protected function getParam($name)
     {
-        if(array_key_exists($name, $this->request)) {
-            return $this->request[$name];
+        if(array_key_exists($name, $this->requestParams)) {
+            return $this->requestParams[$name];
         } else {
             return NULL;
         }
