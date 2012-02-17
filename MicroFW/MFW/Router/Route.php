@@ -67,11 +67,11 @@ class MFW_Router_Route
      *
      * @param string $name The name of the route
      * @param string $uri The uri of the route
-     * @param MFW_Router_Route_Handler $handler The handler of the route (controller/action)
+     * @param MFW_Router_Route_HandlerInterface $handler The handler of the route (controller/action)
      * @param array $defaults The default values of parameters of the route
      * @param array $req The requirements of the parameters of the route
      */
-    public function __construct($name, $uri, MFW_Router_Route_Handler $handler, array $defaults = array(), array $req = array())
+    public function __construct($name, $uri, MFW_Router_Route_HandlerInterface $handler, array $defaults = array(), array $req = array())
     {
         $this->setName($name);
 
@@ -151,9 +151,9 @@ class MFW_Router_Route
     /**
      * Set the handler of the route
      *
-     * @param MFW_Router_Route_Handler $handler The handler of the route
+     * @param MFW_Router_Route_HandlerInterface $handler The handler of the route
      */
-    protected function setHandler(MFW_Router_Route_Handler $handler)
+    protected function setHandler(MFW_Router_Route_HandlerInterface $handler)
     {
         $this->handler = $handler;
     }

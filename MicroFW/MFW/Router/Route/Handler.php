@@ -21,7 +21,7 @@
  * @subpackage Route
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class MFW_Router_Route_Handler
+class MFW_Router_Route_Handler implements MFW_Router_Route_HandlerInterface
 {
     /**
      * @var string The name of the controller
