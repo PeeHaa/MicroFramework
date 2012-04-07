@@ -42,6 +42,22 @@ class MFW_AutoLoader
     }
 
     /**
+     * Load project forms
+     *
+     * @param string $class The name of the class
+     */
+    public function loadForms($class)
+    {
+        $parts = explode('_', $class);
+
+        if (end($parts) != 'Form') {
+            return false;
+        }
+
+        include(MFW_SITE_PATH . '/code/models/Forms.php');
+    }
+
+    /**
      * Load library classes
      *
      * @param string $class The name of the class
