@@ -25,7 +25,7 @@ class MFW_Form_Field_Submit extends MFW_Form_Field_FieldAbstract
 {
     function __construct($args = array())
     {
-        parent::__construct();
+        parent::__construct($args);
     }
 
     /**
