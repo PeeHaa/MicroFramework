@@ -449,6 +449,10 @@ class MFW_Router_Route
         $defaults = $this->getDefaults();
         $uriparts = $this->getUriParts();
 
+        if ($uriparts === null) {
+            return;
+        }
+
         $missing = false;
         foreach($uriparts as $part) {
             if ((!$this->isUriPartVariable($part) || $this->isUriVariableRequired(substr($part, 1))) && $missing !== false) {
