@@ -49,11 +49,11 @@ class MFW_Config
      */
     protected function validateConfigFile($configname)
     {
-        if (!is_file(SITE_PATH . '/config/' . $configname . '.php')) {
+        if (!is_file(MFW_SITE_PATH . '/config/' . $configname . '.php')) {
             throw new RuntimeException('Cannot find config (`' . $configname . '`) file.');
         }
 
-        if (!is_readable(SITE_PATH . '/config/' . $configname . '.php')) {
+        if (!is_readable(MFW_SITE_PATH . '/config/' . $configname . '.php')) {
             throw new RuntimeException('Cannot read config (`' . $configname . '`) file.');
         }
     }
@@ -66,7 +66,7 @@ class MFW_Config
      */
     protected function setConfig($configname)
     {
-        require(SITE_PATH.'/config/' . $configname . '.php');
+        require(MFW_SITE_PATH.'/config/' . $configname . '.php');
 
         $this->config = $config;
     }
@@ -75,10 +75,16 @@ class MFW_Config
      * Gets a configuration option
      *
      * @param string $name The name of the configuration option
+     *
+     * @throws DomainException when config item does not exist
      * @return void
      */
     public function __get($name)
     {
+        if (!property_exists($this->config, $name)) {
+            throw new DomainException('Undefined config option (`' . $name . '`)');
+        }
+
         return $this->config->$name;
     }
 }
