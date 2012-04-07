@@ -40,7 +40,7 @@ class MFW_Form_Field_Text extends MFW_Form_Field_FieldAbstract
      */
     protected function setFieldType()
     {
-        $this->fieldType = 'text'
+        $this->fieldType = 'text';
     }
 
     /**
@@ -72,7 +72,8 @@ class MFW_Form_Field_Text extends MFW_Form_Field_FieldAbstract
             $this->addError('form.field.invalid-format');
         }
 
-        if (!empty($this->getErrors())) {
+        $errors = $this->getErrors();
+        if (!empty($errors)) {
             return false;
         }
 
