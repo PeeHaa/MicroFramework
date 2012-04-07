@@ -98,9 +98,7 @@ abstract class MFW_Form_Field_FieldAbstract
      *
      * @return void
      */
-    protected abstract function setFieldType()
-    {
-    }
+    protected abstract function setFieldType();
 
     /**
      * Get the fieldtype
@@ -118,7 +116,7 @@ abstract class MFW_Form_Field_FieldAbstract
      * @param boolean $required Whether the field is required
      * @return void
      */
-    public function setRequired(bool $required)
+    public function setRequired($required)
     {
         $this->required = $required;
     }
@@ -262,22 +260,32 @@ abstract class MFW_Form_Field_FieldAbstract
     }
 
     /**
+     * Get the first error
+     *
+     * @return null|array The errors
+     */
+    public function getFirstError()
+    {
+        if ($this->isValid()) {
+            return null;
+        }
+
+        return $this->errors[0];
+    }
+
+    /**
      * Cleans the data provided by the user
      *
      * @return void
      */
-    public abstract function clean()
-    {
-    }
+    public abstract function clean();
 
     /**
      * Checks whether the user provided data is valid
      *
      * @return boolean
      */
-    public abstract function isValid()
-    {
-    }
+    public abstract function isValid();
 
     /**
      * Checks whether the value meets the requirements
