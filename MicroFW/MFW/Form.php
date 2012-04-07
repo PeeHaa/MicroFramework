@@ -81,7 +81,7 @@ class MFW_Form
     /**
      * Set whether csrf protection is enabled
      */
-    protected function setCsrfProtection()
+    protected function setCsrfProtection($csrfProtection)
     {
         $this->csrfProtection = $csrfProtection;
     }
@@ -122,6 +122,21 @@ class MFW_Form
     protected function getFields()
     {
         return $this->fields;
+    }
+
+    /**
+     * Get a specific field
+     *
+     * throws UnexpectedValueException When the field is not in the form
+     * @return MFW_Form_Field_FieldAbstract The field
+     */
+    public function getFields($name)
+    {
+        if (!array_key_exists($name, $this->fields)) {
+            throw new UnexpectedValueException('tried to access in undefined field (`' . $name . '`).');
+        }
+
+        return $this->fields[$name];
     }
 
     /**
