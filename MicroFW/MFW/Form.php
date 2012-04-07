@@ -130,7 +130,7 @@ class MFW_Form
      * throws UnexpectedValueException When the field is not in the form
      * @return MFW_Form_Field_FieldAbstract The field
      */
-    public function getFields($name)
+    public function getField($name)
     {
         if (!array_key_exists($name, $this->fields)) {
             throw new UnexpectedValueException('tried to access in undefined field (`' . $name . '`).');
