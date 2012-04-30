@@ -519,6 +519,10 @@ class MFW_Router_Route
     protected function doStaticPartsMatch($urlParts, $routeParts)
     {
         foreach($urlParts as $index => $urlPart) {
+            if (!isset($routeParts[$index])) {
+                return false;
+            }
+
             if ($this->isUriPartVariable($routeParts[$index])) {
                 continue;
             }
