@@ -25,11 +25,6 @@
 class MFW_Form
 {
     /**
-     * @var bool Whether bot protection is enabled in the form
-     */
-    protected $botProtection;
-
-    /**
      * @var bool Whether csrf protection is enabled in the form
      */
     protected $csrfProtection;
@@ -50,32 +45,18 @@ class MFW_Form
     protected $errors = False;
 
     /**
+     * @var bool Whether the form is submitted
+     */
+    protected $isSubmitted = False;
+
+    /**
      * Creates an instance of the form
      *
      * @param array $args The arguments to initialize the field
      */
-    public function __construct($botProtection = True, $csrfProtection = True)
+    public function __construct($csrfProtection = True)
     {
-        $this->setBotProtection($botProtection);
         $this->setCsrfProtection($csrfProtection);
-    }
-
-    /**
-     * Set whether bot protection is enabled
-     */
-    protected function setBotProtection($botProtection)
-    {
-        $this->botProtection = $botProtection;
-    }
-
-    /**
-     * Get whether bot protection is enabled
-     *
-     * @return bool Whether bot protection is enabled
-     */
-    protected function getBotProtection()
-    {
-        return $this->botProtection;
     }
 
     /**
@@ -84,6 +65,10 @@ class MFW_Form
     protected function setCsrfProtection($csrfProtection)
     {
         $this->csrfProtection = $csrfProtection;
+
+        if ($csrfProtection == true) {
+            $this->addField('csrf-token', new MFW_Form_Field_Csrf());
+        }
     }
 
     /**
@@ -133,7 +118,7 @@ class MFW_Form
     public function getField($name)
     {
         if (!array_key_exists($name, $this->fields)) {
-            throw new UnexpectedValueException('tried to access in undefined field (`' . $name . '`).');
+            throw new UnexpectedValueException('Trying to access an undefined field (`' . $name . '`).');
         }
 
         return $this->fields[$name];
@@ -145,7 +130,7 @@ class MFW_Form
     public function clean($data)
     {
         foreach($this->getFields() as $name => $field) {
-            $field->clean();
+            $field->clean($data[$name]);
         }
     }
 
@@ -156,12 +141,24 @@ class MFW_Form
      */
     public function isValid()
     {
+        $this->isSubmitted = true;
+
         foreach($this->getFields() as $name => $field) {
-            if (!$fiel->isValid()) {
+            if (!$field->isValid()) {
                 $this->errors = True;
             }
         }
 
         return !$this->errors;
+    }
+
+    /**
+     * Checks whether the form has been submitted
+     *
+     * @return bool Whether the form is submitted
+     */
+    public function isSubmitted()
+    {
+        return $this->isSubmitted;
     }
 }
