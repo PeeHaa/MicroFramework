@@ -27,15 +27,23 @@ class MFW_Router_Rewrite
     protected $routes = array();
 
     /**
+     * @var MGW_Http_Request The request
+     */
+    protected $request;
+
+    /**
      * Creates an instance of the rewrite engine
      *
      * @param array $routes The routes as defined in the routes.php of the project
+     * @param MFW_Http_Request $request The request
      *
      * @return void
      */
-    public function __construct(array $routes)
+    public function __construct(array $routes, MFW_Http_Request $request)
     {
         $this->parseRoutes($routes);
+
+        $this->request = $request;
     }
 
     /**
@@ -136,7 +144,7 @@ class MFW_Router_Rewrite
      */
     protected function getCurrentUri()
     {
-        return rtrim($_SERVER['REQUEST_URI'], '/');
+        return rtrim($this->request->getPath(), '/');
     }
 
     /**
@@ -156,17 +164,17 @@ class MFW_Router_Rewrite
     /**
      * Finds the route given an url
      *
-     * @param string $url The url to match routes against
+     * @param MFW_HTTP_Request $request The info of the current request
      *
      * @throws RuntimeException If no routes matches the url
      * @return MFW_Router_Route The first route that matches
      */
-    public function getRouteByUrl($url)
+    public function getRouteByUrl(MFW_HTTP_Request $request)
     {
         $routes = $this->getRoutes();
 
         foreach($routes as $route) {
-            if ($route->matchesUrl($url)) {
+            if ($route->matchesUrl($request->getPath())) {
                 return $route;
             }
         }
