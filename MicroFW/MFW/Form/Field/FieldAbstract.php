@@ -87,10 +87,6 @@ abstract class MFW_Form_Field_FieldAbstract
         if (array_key_exists('requirements', $args)) {
             $this->setRequirements($args['requirements']);
         }
-
-        if (array_key_exists('data', $args)) {
-            $this->setRawData($args['data']);
-        }
     }
 
     /**
@@ -278,7 +274,7 @@ abstract class MFW_Form_Field_FieldAbstract
      *
      * @return void
      */
-    public abstract function clean();
+    public abstract function clean($data);
 
     /**
      * Checks whether the user provided data is valid

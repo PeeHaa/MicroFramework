@@ -40,6 +40,6 @@ class MFW_Form_Field_Textarea extends MFW_Form_Field_Text
      */
     protected function setFieldType()
     {
-        $this->fieldType = 'textarea'
+        $this->fieldType = 'textarea';
     }
 }

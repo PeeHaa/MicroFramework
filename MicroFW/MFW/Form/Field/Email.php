@@ -46,7 +46,8 @@ class MFW_Form_Field_Email extends MFW_Form_Field_Text
             $this->addError('form.field.invalid-emailaddress');
         }
 
-        if (!empty($this->getErrors())) {
+        $errors = $this->getErrors();
+        if (!empty($errors)) {
             return false;
         }
 

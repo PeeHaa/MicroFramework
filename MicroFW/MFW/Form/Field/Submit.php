@@ -43,13 +43,9 @@ class MFW_Form_Field_Submit extends MFW_Form_Field_FieldAbstract
      *
      * @return void
      */
-    public function clean()
+    public function clean($data)
     {
-        $value = trim($this->getRawData());
-
-        if (!$value) $value = null;
-
-        $this->setData($value);
+        $this->setData($data);
     }
 
     /**

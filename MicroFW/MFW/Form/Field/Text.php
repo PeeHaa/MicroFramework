@@ -48,9 +48,11 @@ class MFW_Form_Field_Text extends MFW_Form_Field_FieldAbstract
      *
      * @return void
      */
-    public function clean()
+    public function clean($data)
     {
-        $value = trim($this->getRawData());
+        $this->setRawData($data);
+
+        $value = trim($data);
 
         if (!$value) $value = null;
 
