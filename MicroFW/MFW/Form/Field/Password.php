@@ -30,7 +30,7 @@ class MFW_Form_Field_Password extends MFW_Form_Field_Text
      */
     public function __construct($args = array())
     {
-        parent::__construct();
+        parent::__construct($args);
     }
 
     /**
