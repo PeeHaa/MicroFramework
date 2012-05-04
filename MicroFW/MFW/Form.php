@@ -144,12 +144,46 @@ class MFW_Form
         $this->isSubmitted = true;
 
         foreach($this->getFields() as $name => $field) {
-            if (!$field->isValid()) {
-                $this->errors = True;
+            if ($field->getFieldType() == 'file') {
+                if (!$field->isValid($name)) {
+                    $this->errors = True;
+                }
+            } else {
+                if (!$field->isValid()) {
+                    $this->errors = True;
+                }
             }
         }
 
+        if ($this->processFileUploads() === false) {
+            $this->errors = true;
+        }
+
         return !$this->errors;
+    }
+
+    /**
+     * Processes the file uploads when everything else in the form is valid
+     *
+     * @return bool Whether the file(s) are successfully processed
+     */
+    protected function processFileUploads()
+    {
+        if ($this->errors) {
+            return false;
+        }
+
+        foreach($this->getFields() as $name => $field) {
+            if ($this->getField($name)->getFieldType() != 'file') {
+                continue;
+            }
+
+            if ($this->getField($name)->save() === false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
