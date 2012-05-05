@@ -61,6 +61,7 @@ class MFW_Http_Client
         'strict'          => true,
         'output_stream'   => false,
         'encodecookies'   => true,
+        'verifypeer'      => 1,
     );
 
     /**
@@ -111,7 +112,7 @@ class MFW_Http_Client
             $this->setUri($uri);
         }
 
-        if (!$options) {
+        if ($options) {
             $this->setOptions($options);
         }
     }
@@ -214,62 +215,65 @@ class MFW_Http_Client
      * @todo Add error checking for pages not returning within timeout etc
      * @todo Make CURLOPT_HEADER optional by introducing setter and getter
      * @param null|MFW_Http_Uri $uri The URI to make the request to
+     * @param int $redirects The numbers of redirects followed
      * @return void
      */
-    public function request(MFW_Http_Uri $uri = null)
+    public function request(MFW_Http_Uri $uri = null, $redirects = 0)
     {
-        $redirects = 0;
-
         if ($uri === null) {
             $uri = $this->getUri();
         }
 
-        while ($redirects < $this->options['maxredirects']) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uri->getUri());
-
-            if ($this->options['referer'] !== null) {
-                curl_setopt($ch, CURLOPT_REFERER, $this->options['referer']);
-            }
-
-            if ($uri->getScheme() == 'https') {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-            }
-
-            curl_setopt($ch, CURLOPT_USERAGENT, $this->options['useragent']);
-            curl_setopt($ch, CURLOPT_HEADER, 1); // should be an option / getter, setter
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, $this->options['timeout']);
-
-            $response = curl_exec($ch);
-            $info = curl_getinfo($ch);
-            $http_response = new MFW_Http_Response($response);
-
-            $this->addResponse($http_response, $info);
-
-            if (floor($info['http_code'] / 100) != 3) {
-                return null;
-            }
-
-            $redirects++;
-
-            $http_response->parseResponse();
-            $headers = $http_response->getHeaders();
-
-            if (!array_key_exists('Location', $headers)) {
-                return null;
-            }
-
-            $redirect_uri = $headers['Location'];
-            if (strpos($headers['Location'], '/') === 0) {
-                $uri->setPath($headers['Location']);
-
-                $uri->updateUri();
-            }
-
-            $this->request($uri);
+        if ($redirects == $this->options['maxredirects']) {
+            return null;
         }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uri->getUri());
+
+        if ($this->options['referer'] !== null) {
+            curl_setopt($ch, CURLOPT_REFERER, $this->options['referer']);
+        }
+
+        if ($uri->getScheme() == 'https') {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->options['useragent']);
+        curl_setopt($ch, CURLOPT_HEADER, 1); // should be an option / getter, setter
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->options['timeout']);
+
+        $response = curl_exec($ch);
+        $info = curl_getinfo($ch);
+
+        $http_response = new MFW_Http_Response($response);
+
+        $this->addResponse($http_response, $info);
+
+        if (floor($info['http_code'] / 100) != 3) {
+            return null;
+        }
+
+        $redirects++;
+
+        $http_response->parseResponse();
+        $headers = $http_response->getHeaders();
+
+        if (!array_key_exists('Location', $headers)) {
+            return null;
+        }
+
+        if (strpos($headers['Location'], '/') === 0) {
+            $uri->setPath($headers['Location']);
+
+            $uri->updateUri();
+        } else {
+            $uri = new MFW_Http_Uri($headers['Location']);
+        }
+
+        $this->request($uri, $redirects);
     }
 
     /**
