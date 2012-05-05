@@ -179,6 +179,10 @@ class MFW_Router_Rewrite
             }
         }
 
-        throw new RuntimeException('No route matches url: `' . $url . '`');
+        if (isset($routes[404])) {
+            return $routes[404];
+        }
+
+        throw new RuntimeException('No route matches url: `' . $request->getPath() . '`');
     }
 }
