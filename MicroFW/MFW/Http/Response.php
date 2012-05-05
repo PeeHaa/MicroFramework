@@ -136,7 +136,7 @@ class MFW_Http_Response
 
                 $this->headers[trim($keyvaluepair[0])] = trim($keyvaluepair[1]);
             } else {
-                $this->headers[trim($part)] = null;
+                $this->headers['http_status'] = trim($part);
             }
         }
     }
