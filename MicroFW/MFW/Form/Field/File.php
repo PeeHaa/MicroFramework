@@ -130,11 +130,11 @@ class MFW_Form_Field_File extends MFW_Form_Field_FieldAbstract
     {
         $fileData = $this->getRawData();
 
-        if ($this->isRequired() && !$fileData) {
+        if ($this->isRequired() && !$fileData['tmp_name']) {
             $this->addError('form.field.required');
         }
 
-        if ($fileData) {
+        if ($fileData['tmp_name']) {
             if ($this->maxSize > 0 && $fileData['size'] > $this->maxSize) {
                 $this->addError('form.field.filesize-exceeds-limits');
             }
@@ -161,13 +161,15 @@ class MFW_Form_Field_File extends MFW_Form_Field_FieldAbstract
     {
         $fileData = $this->getRawData();
 
-        if ($fileData) {
-            $saveName = $this->generateSaveName($this->saveName, $fileData['tmp_name']);
-            $fullSavePath = $this->getFullPath($this->savePath) . $saveName;
+        if (!$fileData['tmp_name']) {
+            return true;
+        }
 
-            if(!move_uploaded_file($fileData['tmp_name'], $fullSavePath)) {
-                $this->addError('form.field.upload.failed');
-            }
+        $saveName = $this->generateSaveName($this->saveName, $fileData['tmp_name']);
+        $fullSavePath = $this->getFullPath($this->savePath) . $saveName;
+
+        if(!move_uploaded_file($fileData['tmp_name'], $fullSavePath)) {
+            $this->addError('form.field.upload.failed');
         }
 
         $errors = $this->getErrors();
