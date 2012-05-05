@@ -240,7 +240,7 @@ abstract class MFW_Form_Field_FieldAbstract
      * @param string $msg The error message
      * @return void
      */
-    protected function addError($msg)
+    public function addError($msg)
     {
         $this->errors[] = $msg;
     }
