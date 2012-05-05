@@ -41,14 +41,17 @@ class MFW_Controller_Dispatcher
      *
      * @param MFW_Router_Rewrite $router The router
      * @param MFW_View $view The view instance
+     * @param MFW_Http_Request $request The request instance
      *
      * @return void
      */
-    public function __construct(MFW_Router_Rewrite $router, MFW_View $view)
+    public function __construct(MFW_Router_Rewrite $router, MFW_View $view, MFW_Http_Request $request)
     {
         $this->setRouter($router);
 
         $this->setView($view);
+
+        $this->setRequest($request);
     }
 
     /**
@@ -92,6 +95,26 @@ class MFW_Controller_Dispatcher
     }
 
     /**
+     * Set the request
+     *
+     * @param MFW_HTTP_Request $request The request instance
+     */
+    protected function setRequest(MFW_HTTP_Request $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
+     * Get the request instance
+     *
+     * @return MFW_HTTP_Request The request
+     */
+    protected function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
      * Set the controller path
      *
      * @param string $path The controller path
@@ -127,14 +150,14 @@ class MFW_Controller_Dispatcher
      */
     public function dispatch()
     {
-        $requestedRoute = $this->getRouter()->getRouteByUrl($_SERVER['REQUEST_URI']);
+        $requestedRoute = $this->getRouter()->getRouteByUrl($this->request);
 
         $controllerName = $this->getControllerName($requestedRoute->getHandler()->getController());
         $controllerFile = $this->getControllerFile($controllerName);
 
         include $controllerFile;
 
-        $controller = new $controllerName($this->getRouter(), $this->getView());
+        $controller = new $controllerName($this->getRouter(), $this->getView(), $this->getRequest());
 
         $actionName = $this->getActionName($requestedRoute->getHandler()->getAction());
         if (is_callable(array($controller, $actionName)) === false) {

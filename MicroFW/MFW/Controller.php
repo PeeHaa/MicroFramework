@@ -33,6 +33,11 @@ class MFW_Controller
     protected $view;
 
     /**
+     * @var MFW_Http_Request The request
+     */
+    protected $request;
+
+    /**
      * @var array request parameters
      */
     protected $requestParams = array();
@@ -42,14 +47,17 @@ class MFW_Controller
      *
      * @param MFW_Router_Rewrite $router The router
      * @param MFW_View $view The view instance
+     * @param MFW_Http_Request $request The request instance
      *
      * @return void
      */
-    public function __construct(MFW_Router_Rewrite $router, MFW_View $view)
+    public function __construct(MFW_Router_Rewrite $router, MFW_View $view, MFW_Http_Request $request)
     {
         $this->setRouter($router);
 
         $this->setView($view);
+
+        $this->setRequest($request);
     }
 
     /**
@@ -93,6 +101,16 @@ class MFW_Controller
     }
 
     /**
+     * Set the request
+     *
+     * @param MFW_HTTP_Request $request The request instance
+     */
+    protected function setRequest(MFW_HTTP_Request $request)
+    {
+        $this->request = $request;
+    }
+
+    /**
      * Get the current or built url
      *
      * @param null|string $name The name of the route
@@ -115,7 +133,7 @@ class MFW_Controller
     {
         $this->setRequestParams();
 
-        $route = $this->getRouter()->getRouteByUrl($this->url());
+        $route = $this->getRouter()->getRouteByUrl($this->request);
 
         $this->setUrlParams($route);
     }
@@ -273,7 +291,7 @@ class MFW_Controller
      */
     protected function redirect($uri)
     {
-        header('Location: ' . $uri);
+        header('Location: ' . MFW_BASE_URL . $uri);
         exit();
     }
 }
