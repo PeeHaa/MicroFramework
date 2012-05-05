@@ -237,7 +237,7 @@ class MFW_Http_Client
 
         if ($uri->getScheme() == 'https') {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->options['verifypeer']);
         }
 
         curl_setopt($ch, CURLOPT_USERAGENT, $this->options['useragent']);
