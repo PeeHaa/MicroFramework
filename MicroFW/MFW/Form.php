@@ -144,14 +144,8 @@ class MFW_Form
         $this->isSubmitted = true;
 
         foreach($this->getFields() as $name => $field) {
-            if ($field->getFieldType() == 'file') {
-                if (!$field->isValid($name)) {
-                    $this->errors = True;
-                }
-            } else {
-                if (!$field->isValid()) {
-                    $this->errors = True;
-                }
+            if (!$field->isValid()) {
+                $this->errors = True;
             }
         }
 
