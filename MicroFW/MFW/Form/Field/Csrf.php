@@ -45,30 +45,19 @@ class MFW_Form_Field_Csrf extends MFW_Form_Field_Hidden
         $this->fieldType = 'hidden';
     }
 
+    /**
+     * Gets the current CSRF token
+     *
+     * @return string The CSRF token
+     * @throws RuntimeException When there is no token available
+     */
     protected function getToken()
     {
         if (!isset($_SESSION['MFW_csrf-token'])) {
-            $_SESSION['MFW_csrf-token'] = $this->getRandomString($this->getRandomCharsString());
+            throw new RuntimeException('There is no CSRF token generated.');
         }
 
         return $_SESSION['MFW_csrf-token'];
-    }
-
-    protected function getRandomCharsString()
-    {
-        return 'bcdfghjklmnpqrstvwxzBCDFGHJKLMNPQRSTVWXZ0123456789!@#$%^&*()-_=+[]{}|;:,.<>/?';
-    }
-
-    protected function getRandomString($chars, $length = 128)
-    {
-        $count = strlen($chars);
-
-        for ($i = 0, $result = ''; $i < $length; $i++) {
-            $index = rand(0, $count - 1);
-            $result .= substr($chars, $index, 1);
-        }
-
-        return sha1($result);
     }
 
     /**
