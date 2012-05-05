@@ -120,7 +120,7 @@ class MFW_Mail
      *
      * @return string The hash
      */
-    protected getBoundary()
+    protected function getBoundary()
     {
         return $this->boundary;
     }
@@ -141,7 +141,7 @@ class MFW_Mail
      *
      * @return MFW_Mail_Address The emailaddress of the sender
      */
-    protected function getSender($address, $name = null)
+    protected function getSender()
     {
         return $this->emailFrom;
     }
@@ -289,7 +289,7 @@ class MFW_Mail
      *
      * @return string The subject of the mail
      */
-    public function setSubject($subject)
+    public function getSubject()
     {
         return $this->subject;
     }
@@ -309,7 +309,7 @@ class MFW_Mail
      *
      * @return string The text of the body
      */
-    public function getBodyText($text)
+    public function getBodyText()
     {
         return $this->bodyText;
     }
@@ -329,7 +329,7 @@ class MFW_Mail
      *
      * @return string The HTML of the body
      */
-    public function getBodyHtml($html)
+    public function getBodyHtml()
     {
         return $this->bodyHtml;
     }
@@ -398,8 +398,6 @@ class MFW_Mail
         } else {
             $this->buildHeaders();
         }
-
-        $this->buildMessage();
     }
 
     /**
@@ -415,11 +413,12 @@ class MFW_Mail
             throw new BadMethodCallException('Missing `from` address.');
         }
 
-        if (empty($this->getRecipients())) {
+        $recipients = $this->getRecipients();
+        if (empty($recipients)) {
             throw new BadMethodCallException('At least one recipient is required.');
         }
 
-        if ($this->getSubject()) === null) {
+        if ($this->getSubject() === null) {
             throw new BadMethodCallException('Missing mail `subject`.');
         }
 
@@ -494,7 +493,7 @@ class MFW_Mail
                 $ccHeader.= $separator . $debugAddress->getRfcString();
                 $separator = ', ';
             }
-            $headers.= $ccHeader . "\r\n"
+            $headers.= $ccHeader . "\r\n";
         }
 
         if (!empty($bccs)) {
@@ -504,7 +503,7 @@ class MFW_Mail
                 $bccHeader.= $separator . $debugAddress->getRfcString();
                 $separator = ', ';
             }
-            $headers.= $bccHeader . "\r\n"
+            $headers.= $bccHeader . "\r\n";
         }
 
         $headers.= 'X-Mailer: MicroFramework Mailer' . "\r\n";
@@ -544,7 +543,7 @@ class MFW_Mail
                 $ccHeader.= $separator . $cc->getRfcString();
                 $separator = ', ';
             }
-            $headers.= $ccHeader . "\r\n"
+            $headers.= $ccHeader . "\r\n";
         }
 
         if (!empty($bccs)) {
@@ -554,7 +553,7 @@ class MFW_Mail
                 $bccHeader.= $separator . $bcc->getRfcString();
                 $separator = ', ';
             }
-            $headers.= $bccHeader . "\r\n"
+            $headers.= $bccHeader . "\r\n";
         }
 
         $headers.= 'X-Mailer: MicroFramework Mailer' . "\r\n";
@@ -566,7 +565,7 @@ class MFW_Mail
     /**
      * Build the mail body (the actual message to be send)
      */
-    protected function buildMessage()
+    protected function getMessageBody()
     {
         $message = '';
 
@@ -574,7 +573,7 @@ class MFW_Mail
             $message.= '--PHP-alt-' . $this->getBoundary() . "\r\n";
             $message.= 'Content-Type: text/plain; charset="' . $this->getCharSet() . '"' . "\r\n";
             $message.= 'Content-Transfer-Encoding: 7bit' . "\r\n\r\n";
-            $message.= $this->getBodyText ."\r\n\r\n";
+            $message.= $this->getBodyText() ."\r\n\r\n";
         }
 
         if ($this->getBodyHtml() !== null) {
@@ -586,7 +585,7 @@ class MFW_Mail
 
         $message.= '--PHP-alt-' . $this->getBoundary() . '--' . "\r\n";
 
-        $this->setMessage($message);
+        return $message;
     }
 
     /**
@@ -602,7 +601,7 @@ class MFW_Mail
 
         if ($this->isDebugModeEnabled()) {
             $debugAddress = new MFW_Mail_Address(MFW_DEBUG_ADDRESS);
-            $mailSent = @mail($debugAddress->getRfcString(), $this->getSubject(), $this->getMessage(), $this->getHeaders());
+            $mailSent = @mail($debugAddress->getRfcString(), $this->getSubject(), $this->getMessageBody(), $this->getHeaders());
         } else {
             $to = '';
             $separator = '';
@@ -611,7 +610,7 @@ class MFW_Mail
                 $separator = ', ';
             }
 
-            $mailSent = @mail($to, $this->getSubject(), $this->getMessage(), $this->getHeaders());
+            $mailSent = @mail($to, $this->getSubject(), $this->getMessageBody(), $this->getHeaders());
         }
 
         if (!$mailSent) {
