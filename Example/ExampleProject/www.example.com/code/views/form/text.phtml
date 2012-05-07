@@ -1,0 +1,22 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+$field = $this->defaultSlot('form.field', null);
+if (!$field) return;
+
+$attributes = '';
+if ($form->getField($field)->getAttributes()) {
+    foreach($form->getField($field)->getAttributes() as $attr_name => $attr_val) {
+        $attributes.= ' '.$attr_name.'="'.$attr_val.'"';
+    }
+}
+
+$s = '';
+$s.= '<div class="formfield-container">'.N;
+$s.= '<input type="text" name="'.$field.'" value="'.$form->getField($field)->getInitial().'"'.$attributes.'>';
+if ($form->isSubmitted() && !$form->getField($field)->isValid()) {
+    $s.= '<img class="text-error" src="/style/error.png" alt="'.$form->getField($field)->getFirstError().'" title="'.$form->getField($field)->getFirstError().'">'.N;
+}
+$s.= '</div>'.N;
+
+print($s);

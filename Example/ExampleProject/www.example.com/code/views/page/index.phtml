@@ -1,0 +1,20 @@
+<?php
+
+$s = '';
+
+$s.= '<h2>MicroFramework project is successfully installed!</h2>'.N;
+
+$s.= '<p>When you see this page it means that you have successfully installed a new project using the MicroFramework!</p>'.N;
+$s.= '<p><a href="https://github.com/PeeHaa/MicroFramework" target="_blank">MicroFramework</a> is a free (as in beer) framework written in PHP.</p>'.N;
+$s.= '<p>Please note that the current release is only a development version and should not be used in production unless you know what you are doing.</p>'.N;
+$s.= '<p>Either way I\'m fine, but don\'t expect any support from me while it is not production ready and it sets your cat on fire or something like that.</p>'.N;
+
+$this->setSlot('pagetitle', null);
+$this->setSlot('meta.description', '');
+$this->setSlot('meta.keywords', '');
+$this->setSlot('meta.author', 'Pieter Hordijk');
+$this->setSlot('meta.revisit-after', '1 month');
+
+$this->setSlot('content', $s);
+
+print($this->render('base/page.phtml'));

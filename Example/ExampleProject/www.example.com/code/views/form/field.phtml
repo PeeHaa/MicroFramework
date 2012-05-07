@@ -1,0 +1,5 @@
+<?php
+
+$fieldname = $this->defaultSlot('form.field', null);
+
+print($this->render('form/'.$form->getField($fieldname)->getFieldType().'.phtml'));

@@ -1,0 +1,16 @@
+<?php
+
+$s = '';
+
+$s.= '<script>'.N;
+$s.= '  if (window!=top){top.location.href=location.href;}'.N;
+$s.= '  document.createElement(\'header\');'.N;
+$s.= '  document.createElement(\'nav\');'.N;
+$s.= '  document.createElement(\'section\');'.N;
+$s.= '  document.createElement(\'article\');'.N;
+$s.= '  document.createElement(\'aside\');'.N;
+$s.= '  document.createElement(\'footer\');'.N;
+$s.= '  document.createElement(\'time\');'.N;
+$s.= '</script>'.N;
+
+print($s);

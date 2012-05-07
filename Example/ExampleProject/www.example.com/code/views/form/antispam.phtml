@@ -1,0 +1,13 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+if (!$form->botprotection) return;
+
+$s = '';
+
+foreach($form->fake_fields as $fieldname => $field) {
+    $this->setSlot('form.field', $fieldname);
+    $s.= $this->render('form/'.$field->getFieldType().'.phtml').N;
+}
+
+print($s);

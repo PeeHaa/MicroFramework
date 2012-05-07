@@ -1,24 +1,15 @@
 <?php
-/**
- * Setup all routes for the project
- *
- * PHP version 5.3
- *
- * @category   Example Project
- * @author     Pieter Hordijk <info@pieterhordijk.com>
- * @copyright  Copyright (c) 2012 Pieter Hordijk
- * @license
- * @version    1.0.0
- */
 
-/**
- * Setup all routes for the project
- * Defined routes should be compatible with the MicroFramework rewrite engine
- * https://github.com/PeeHaa/MicroFramework/tree/master/MicroFW/MFW/Router
+/*
+ * Routes are defined as array elements in the following format:
  *
- * @category   Example Project
- * @author     Pieter Hordijk <info@pieterhordijk.com>
- */
+ * Array key is route name (must be unique)
+ * First element is the url to route (use a colon for variable parts e.g. /some/url/:variable)
+ * Second element is the controller/action to route the request to
+ * Third element are the default values for the url variables (e.g. array('variable'=>'value') or to make the variable optional array('variable'=>false))
+ * Fourth optional element are the requirements to the variable should follow, this is a regex pattern
+*/
+
 $routes = array(
 
 'index'                             => array('/',

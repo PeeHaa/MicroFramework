@@ -1,0 +1,25 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+$field = $this->defaultSlot('form.field', null);
+if (!$field) return;
+
+$attributes = '';
+if ($form->getField($field)->getAttributes()) {
+    foreach($form->getField($field)->getAttributes() as $attr_name => $attr_val) {
+        $attributes.= ' '.$attr_name.'="'.$attr_val.'"';
+    }
+}
+
+$s = '';
+$s.= '<div class="formfield-container">'.N;
+$s.= '<div contenteditable="true"'.$attributes.'>'.N;
+$s.= $form->getField($field)->getInitial().N;
+$s.= '</div>'.N;
+if (!$form->getField($field)->isValid()) {
+    $s.= '<img class="richtext-error" src="/style/error.png" alt="'.$form->getField($field)->getFirstError().'" title="'.$form->getFields($field)->getFirstError().'">'.N;
+}
+$s.= '</div>'.N;
+$s.= $this->render('form/hidden.phtml');
+
+print($s);

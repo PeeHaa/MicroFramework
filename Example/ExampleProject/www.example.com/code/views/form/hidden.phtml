@@ -1,0 +1,17 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+$field = $this->defaultSlot('form.field', null);
+if (!$field) return;
+
+$attributes = '';
+if ($form->getField($field)->getAttributes()) {
+    foreach($form->fields[$field]->getAttributes() as $attr_name => $attr_val) {
+        $attributes.= ' '.$attr_name.'="'.$attr_val.'"';
+    }
+}
+
+$s = '';
+$s.= '<input type="hidden" name="'.$field.'" value="'.$form->getField($field)->getInitial().'"'.$attributes.'>';
+
+print($s);

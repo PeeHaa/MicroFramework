@@ -1,0 +1,12 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+$formfield = $this->defaultSlot('form.field', null);
+
+if (!$form || !$formfield) return;
+
+$s = '';
+
+$s.= $this->render('form/'.$form->getField($formfield)->getFieldType().'.phtml');
+
+print($s);

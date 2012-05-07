@@ -1,0 +1,26 @@
+<?php
+
+$form = $this->defaultSlot('form', null);
+$field = $this->defaultSlot('form.field', null);
+$label = $this->defaultSlot('form.fieldlabel', null);
+if (!$field) return;
+
+$attributes = '';
+if ($form->getField($field)->getAttributes()) {
+    foreach($form->getField($field)->getAttributes() as $attr_name => $attr_val) {
+        $attributes.= ' '.$attr_name.'="'.$attr_val.'"';
+    }
+}
+
+$s = '';
+
+$checked = null;
+if ($form->fields[$field]->getInitial()) {
+    $checked = ' checked="checked"';
+}
+$s.= '<label><input type="checkbox" name="'.$field.'"'.$attributes.$checked.'>'.$label.'</label>';
+if (!$form->fields[$field]->isValid()) {
+    $s.= '<img class="checkbox-error" src="/style/error.png" alt="'.$form->getField($field)->getFirstError().'" title="'.$form->getField($field)->getFirstError().'">'.N;
+}
+
+print($s);

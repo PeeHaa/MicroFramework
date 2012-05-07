@@ -11,52 +11,62 @@ $metakeywords = $this->defaultSlot('meta.keywords', null);
 $metaauthor = $this->defaultSlot('meta.author', null);
 $metarevisit = $this->defaultSlot('meta.revisit-after', null);
 
-$canonical_url = $this->defaultSlot('canonical.url', NULL);
+$canonical_url = $this->defaultSlot('canonical.url', null);
 
 $s = '';
 
 $s.= '<!DOCTYPE html>'.N;
-$s.= '<html>'.N;
+$s.= '<html lang="en">'.N;
 $s.= '  <head>'.N;
 $s.= '    <meta charset="UTF-8">'.N;
-if ($metadescription) $s.= '    <meta name="description" content="'.str_replace('"', '', $metadescription).'">'.N;
-if ($metakeywords) $s.= '    <meta name="keywords" content="'.str_replace('"', '', $metakeywords).'">'.N;
-if ($metaauthor) $s.= '    <meta name="author" content="'.$metaauthor.'">'.N;
+if ($metadescription) {
+    $s.= '    <meta name="description" content="'.str_replace('"', '', $metadescription).'">'.N;
+}
+if ($metakeywords) {
+    $s.= '    <meta name="keywords" content="'.str_replace('"', '', $metakeywords).'">'.N;
+}
+if ($metaauthor) {
+    $s.= '    <meta name="author" content="'.$metaauthor.'">'.N;
+}
 $s.= '    <meta name="robots" content="index, follow">'.N;
-if ($metarevisit) $s.= '    <meta name="revisit-after" content="'.$metarevisit.'">'.N;
+if ($metarevisit) {
+    $s.= '    <meta name="revisit-after" content="'.$metarevisit.'">'.N;
+}
 $s.= '    <title>'.$pagetitle.MFW_SITE_NAME.'</title>'.N;
 $s.= '    <link rel="shortcut icon" href="/favicon.ico">'.N;
 
-if ($canonical_url) $s.= '    <link rel="canonical" href="'.$canonical_url.'">'.N;
+if (MFW_ENV_MODE === MFW_ENV_DEBUG) {
+    $s.= '    <link href="/style/style.css" rel="stylesheet" type="text/css">'.N;
+} else {
+    $s.= '    <link href="/style/style-min.css" rel="stylesheet" type="text/css">'.N;
+}
+
+if ($canonical_url) {
+    $s.= '    <link rel="canonical" href="'.$canonical_url.'">'.N;
+}
 
 $s.= $this->render('base/google_analytics.phtml').N;
-
-$s.= '    <script>'.N;
-$s.= '      if (window!=top){top.location.href=location.href;}'.N;
-$s.= '      document.createElement(\'header\');'.N;
-$s.= '      document.createElement(\'nav\');'.N;
-$s.= '      document.createElement(\'section\');'.N;
-$s.= '      document.createElement(\'article\');'.N;
-$s.= '      document.createElement(\'aside\');'.N;
-$s.= '      document.createElement(\'footer\');'.N;
-$s.= '      document.createElement(\'time\');'.N;
-$s.= '    </script>'.N;
+$s.= $this->render('base/html5-elements-fix.phtml');
 
 $s.= '  </head>'.N;
 $s.= '  <body>'.N;
 $s.= '    <header>'.N;
 $s.= $this->render('base/header.phtml');
 $s.= '    </header>'.N;
+
 $s.= '    <div id="body">'.N;
-$s.= '      <div id="content">'.N;
-$s.= '        <div class="content-block">'.N;
 $s.= $content;
-$s.= '        </div>'.N;
-$s.= '      </div>'.N;
 $s.= '    </div>'.N;
 $s.= '    <footer>'.N;
 $s.= $this->render('base/footer.phtml');
 $s.= '    </footer>'.N;
+$s.= '    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>'.N;
+$s.= '    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>'.N;
+if (MFW_ENV_MODE === MFW_ENV_DEBUG) {
+    $s.= '    <script src="/js/site.js"></script>'.N;
+} else {
+    $s.= '    <script src="/js/site-min.js"></script>'.N;
+}
 $s.= '  </body>'.N;
 $s.= '</html>'.N;
 

@@ -1,25 +1,8 @@
 <?php
-/**
- * Setup the configuration for a environment
- *
- * PHP version 5.3
- *
- * @category   Example Project
- * @author     Pieter Hordijk <info@pieterhordijk.com>
- * @copyright  Copyright (c) 2012 Pieter Hordijk
- * @license
- * @version    1.0.0
- */
 
 /**
- * Setup the configuration for a environment
- *
- * @category   Example Project
- * @author     Pieter Hordijk <info@pieterhordijk.com>
- */
-
- /**
  * Setup error reporting
+ * E.g. set display errors to 0 for production
  */
 ini_set('display_errors',1);
 error_reporting(E_ALL | E_STRICT);
@@ -27,7 +10,7 @@ error_reporting(E_ALL | E_STRICT);
 /**
  * Set the absolute base path of the library
  */
-define('MFW_LIB_PATH', '/path/to/library/MicroFW');
+define('MFW_LIB_PATH', '/path/to/MicroFW');
 
 /**
  * Initialize the library
@@ -37,7 +20,7 @@ require_once(MFW_LIB_PATH.'/init.php');
 /**
  * Set the domain name(s)
  */
-define('MFW_BASE_DOMAIN', 'example.com');
+define('MFW_BASE_DOMAIN', 'www.yourdomain.com');
 define('MFW_BASE_URL', 'http://'.MFW_BASE_DOMAIN);
 define('MFW_BASE_SSL_URL', 'https://'.MFW_BASE_DOMAIN);
 
@@ -50,10 +33,11 @@ define('MFW_ENV_MODE', MFW_ENV_DEBUG);
  * Setup mail
  */
 define('MFW_MAIL_USE', False);
-define('MFW_DEBUG_ADDRESS', 'info@example.com');
+define('MFW_DEBUG_ADDRESS', 'you@yourdomain.com');
 
 /**
  * Set the OS
+ * MFW_OS_WINDOWS, MFW_OS_LINUX, MFW_OS_MAC
  */
 define('MFW_OS', MFW_OS_WINDOWS);
 
@@ -73,11 +57,11 @@ define('MFW_PROXY_PORT', '');
  * Set the databases settings
  */
 define('MFW_DB_ENGINE', 'pgsql');
-define('MFW_DB_NAME', 'dbexample');
+define('MFW_DB_NAME', 'dbname');
 define('MFW_DB_HOST', 'localhost');
 define('MFW_DB_PORT', null);
-define('MFW_DB_USERNAME', 'dbrole');
-define('MFW_DB_PASSWORD', 'dbrolepassword');
+define('MFW_DB_USERNAME', 'dbusername');
+define('MFW_DB_PASSWORD', 'dbpassword');
 
 /**
  * Set the Google Analytics code (or false if disabled)
@@ -87,17 +71,17 @@ define('MFW_GA_CODE', False);
 /**
  * Set the base name of the project
  */
-define('MFW_SITE_NAME', 'Example Project');
+define('MFW_SITE_NAME', 'MicroFramework Example Project');
 
 /**
  * Setup sessions
  */
-session_set_cookie_params(0, '/', '.'.MFW_BASE_DOMAIN, False, True);
+session_set_cookie_params(1209600, '/', '.'.MFW_BASE_DOMAIN, False, True);
 
 /**
  * Set the base name of the cookies
  */
-define('MFW_SITE_COOKIE_NAME', 'ExampleProject');
+define('MFW_SITE_COOKIE_NAME', 'MFWExample');
 
 /**
  * Set the timezone
