@@ -21,7 +21,7 @@
  * @subpackage Connection
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class MFW_Db_Connection
+class MFW_Db_Connection extends PDO
 {
     /**
      * @var string The database engine
@@ -59,20 +59,36 @@ class MFW_Db_Connection
     protected $db;
 
     /**
-     * Create connection instance and
+     * Create connection instance
      *
-     * @todo Need to find out whether it will be better suited to use dependency injection here
+     * @param string $engine The database driver to use
+     * @param string $database The name of the database
+     * @param string $host The host with the sql server
+     * @param null|int $port The server port
+     * @param string $username The username
+     * @param string $password The password
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($engine, $database, $host, $port, $username, $password)
     {
-        $this->setEngine(MFW_DB_ENGINE);
-        $this->setDatabasename(MFW_DB_NAME);
-        $this->setHost(MFW_DB_HOST);
-        $this->setPort(MFW_DB_PORT);
-        $this->setUsername(MFW_DB_USERNAME);
-        $this->setPassword(MFW_DB_PASSWORD);
+        $this->setEngine($engine);
+        $this->setDatabasename($database);
+        $this->setHost($host);
+        $this->setPort($port);
+        $this->setUsername($username);
+        $this->setPassword($password);
+
+        try {
+            $this->db = new PDO($this->buildConnectString(),
+                                $this->getUsername(),
+                                $this->getPassword()
+                                );
+        } catch (PDOException $e) {
+            throw new PDOException($e);
+        }
+
+        $this->setAttributes();
     }
 
     /**
@@ -236,7 +252,16 @@ class MFW_Db_Connection
             throw new PDOException($e);
         }
 
+        $this->setAttributes();
+    }
+
+    protected function setAttributes()
+    {
+        $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
         if (MFW_ENV_MODE === MFW_ENV_DEBUG) {
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } else {
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         }
     }
@@ -257,5 +282,15 @@ class MFW_Db_Connection
         $connectString.= 'dbname=' . $this->getDatabaseName();
 
         return $connectString;
+    }
+
+    /**
+     * Get the connection
+     *
+     * @return PDOConnection The connection
+     */
+    public function getConnection()
+    {
+        return $this->db;
     }
 }

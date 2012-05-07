@@ -16,6 +16,8 @@
 /**
  * Retrieves and mutates data of a database table
  *
+ * @todo setup a table interface
+ *
  * @category   MicroFramework
  * @package    Db
  * @subpackage Table
@@ -29,7 +31,7 @@ class MFW_Db_Table
     protected $connection;
 
     /**
-     * @var string The namne of the table
+     * @var string The name of the table
      */
     protected $table;
 
@@ -48,14 +50,16 @@ class MFW_Db_Table
      *
      * @param MFW_Db_Connection $connection The database connection
      * @param string $table The name of the table
+     * @param string $sequence The name of the sequence
      *
      * @return void
      */
-    public function __construct(MFW_Db_Connection $connection, $table)
+    public function __construct(MFW_Db_Connection $connection, $table = null, $sequence = null)
     {
         $this->setConnection($connection);
 
         $this->setTable($table);
+        $this->setSequence($sequence);
     }
 
     /**
@@ -67,7 +71,7 @@ class MFW_Db_Table
      */
     protected function setConnection(MFW_Db_Connection $connection)
     {
-        $this->connection = $connection;
+        $this->connection = $connection->getConnection();
     }
 
     /**
@@ -87,7 +91,7 @@ class MFW_Db_Table
      *
      * @return void
      */
-    protected function setTable($table)
+    public function setTable($table)
     {
         $this->table = $table;
     }
@@ -185,7 +189,7 @@ class MFW_Db_Table
         try {
             $query = $this->getConnection()->prepare($sql);
 
-            if ($empty === null) {
+            if ($where === null) {
                 $query->execute();
             } else {
                 $query->execute($where[1]);
@@ -239,12 +243,16 @@ class MFW_Db_Table
      * Parse where condition into sql
      *
      * @param string $sql The sql statement
-     * @param array $params The paramaters
+     * @param mixed $params The paramaters
      *
      * @return array The where statement
      */
-    public function where($sql, array $params = array())
+    public function where($sql, $params = array())
     {
+        if (!is_array($params)) {
+            $params = array($params);
+        }
+
         if (empty($params)) {
             if (strpos($sql, '?') !== False) {
                 throw new UnderflowException('Missing parameters for query `' . $sql . '`.');
@@ -476,7 +484,7 @@ class MFW_Db_Table
 
         try {
             $query = $this->getConnection()->query($sql);
-        catch(PDOException $e) {
+        } catch(PDOException $e) {
             $this->addError($e->getMessage(), $sql);
 
             return False;
@@ -496,7 +504,7 @@ class MFW_Db_Table
 
         try {
             $query = $this->db->query($sql);
-        catch(PDOException $e) {
+        } catch(PDOException $e) {
             $this->addError($e->getMessage(), $sql);
 
             return False;
