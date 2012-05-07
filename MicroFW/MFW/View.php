@@ -50,13 +50,11 @@ class MFW_View
      *
      * @return void
      */
-    public function __construct(MFW_Router_Rewrite $router, $viewPath, $modelFactory)
+    public function __construct(MFW_Router_Rewrite $router, $viewPath)
     {
         $this->setRouter($router);
 
         $this->setViewPath($viewPath);
-
-        $this->vars['modelFactory'] = $modelFactory;
     }
 
     /**
