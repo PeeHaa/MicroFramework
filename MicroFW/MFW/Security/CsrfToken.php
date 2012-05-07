@@ -34,7 +34,7 @@ class MFW_Security_CsrfToken
     public function getToken()
     {
         if (!isset($_SESSION['MFW_csrf-token'])) {
-            $this->generateNewToken();
+            $this->generateNewToken(128);
         }
 
         return $_SESSION['MFW_csrf-token'];
@@ -43,9 +43,11 @@ class MFW_Security_CsrfToken
     /**
      * Generates a new token and adds it to the session
      *
+     * @param int $length The length of the string to generate
+     *
      * @return void
      */
-    public function generateNewToken()
+    public function generateNewToken($length)
     {
         $chars = $this->getRandomCharsString();
 
