@@ -219,9 +219,9 @@ abstract class MFW_Form_Field_FieldAbstract
      */
     protected function setData($data)
     {
-        $this->setInitial($data);
-
         $this->data = $data;
+
+        $this->setInitial($this->getSafeData());
     }
 
     /**
@@ -232,6 +232,16 @@ abstract class MFW_Form_Field_FieldAbstract
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * Get the HTML safe data
+     *
+     * @return string The safe data
+     */
+    public function getSafeData()
+    {
+        return htmlspecialchars($this->data, ENT_QUOTES, 'UTF-8');
     }
 
     /**
