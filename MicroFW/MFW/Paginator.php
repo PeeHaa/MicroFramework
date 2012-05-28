@@ -69,23 +69,21 @@ class MFW_Paginator
     {
         $this->setItemCount($itemCount);
 
-        $this->setCurrentPage = $currentPage;
+        $this->setCurrentPage($currentPage);
 
         if ($pageSize !== null) {
-            $this->setPageSize = $pageSize;
+            $this->setPageSize($pageSize);
         }
 
         if ($windowSize !== null) {
-            $this->windowSize = $windowSize;
+            $this->setWindowSize($windowSize);
         }
 
         $this->setTotalPages();
 
         $this->setFirstIndex();
 
-
-
-        $this->pages = $this->get_paginator();
+        $this->setPages();
     }
 
     /**
@@ -184,7 +182,7 @@ class MFW_Paginator
      */
     protected function setTotalPages()
     {
-        $pages = ceil($this->itemCount() / $this->getPageSize());
+        $pages = ceil($this->getItemCount() / $this->getPageSize());
 
         if ($pages > 0) {
             $this->totalPages = $pages;
@@ -200,7 +198,7 @@ class MFW_Paginator
      */
     public function getTotalPages()
     {
-        return $this->totalPages();
+        return $this->totalPages;
     }
 
     /**
@@ -210,7 +208,7 @@ class MFW_Paginator
      */
     protected function setFirstIndex()
     {
-        $this->firstIndex = ($this->getCurrentPage() * $this->pageSize()) - $this->getPageSize();
+        $this->firstIndex = ($this->getCurrentPage() * $this->getPageSize()) - $this->getPageSize();
     }
 
     /**
@@ -221,16 +219,6 @@ class MFW_Paginator
     public function getFirstIndex()
     {
         return $this->firstIndex;
-    }
-
-    /**
-     * Set the first index of the current page
-     *
-     * @return void
-     */
-    protected function setPages()
-    {
-        $this->firstIndex = ($this->getCurrentPage() * $this->pageSize()) - $this->getPageSize();
     }
 
     /**
