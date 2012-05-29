@@ -14,7 +14,7 @@ Why another freaking framework?
 
 First of all because of the experience I would like to gain. And second: ever just  
 openened an random (popular) framework's source code? Doesn't that just look like  
-a train wreck ([Cake][1] anyone)?
+a train wreck (e.g. [Cake][1] anyone)?
 
 Disclaimer
 ----------
