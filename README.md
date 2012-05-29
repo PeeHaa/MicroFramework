@@ -16,4 +16,14 @@ First of all because of the experience I would like to gain. And second: ever ju
 openened an random (popular) framework's source code? Doesn't that just look like  
 a train wreck ([Cake][1] anyone)?
 
+Disclaimer
+----------
+
+Again this is just a development release so don't complain when it sets your cat  
+on fire or it makes you monitor blow up in your face. But serious: while in  
+development I may and *will* change the code and I will break BC.
+
+There are still some ~~'ugly' parts~~ rough edges that need to be improved  
+before I will be released as stable.
+
 [1]:https://github.com/cakephp/cakephp
