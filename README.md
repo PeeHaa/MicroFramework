@@ -23,7 +23,7 @@ Again this is just a development release so don't complain when it sets your cat
 on fire or it makes you monitor blow up in your face. But serious: while in  
 development I may and *will* change the code and I will break BC.
 
-There are still some ~~'ugly' parts~~ rough edges that need to be improved  
-before I will be released as stable.
+There are still some ~~'ugly' parts~~ rough edges that needs to be improved  
+before I will be release it as stable.
 
 [1]:https://github.com/cakephp/cakephp
